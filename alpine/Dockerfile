@@ -17,7 +17,7 @@ ARG RESTY_VERSION="1.9.7.3"
 ARG RESTY_OPENSSL_VERSION="1.0.2e"
 ARG RESTY_PCRE_VERSION="8.38"
 ARG RESTY_J="1"
-ARG RESTY_CONFIG_OPTIONS="--with-ipv6 --with-pcre-jit"
+ARG RESTY_CONFIG_OPTIONS="--with-ipv6 --with-pcre-jit --with-http_gunzip_module"
 
 # These are not intended to be user-specified
 ARG _RESTY_CONFIG_DEPS="--with-openssl=/tmp/openssl-${RESTY_OPENSSL_VERSION} --with-pcre=/tmp/pcre-${RESTY_PCRE_VERSION}"
