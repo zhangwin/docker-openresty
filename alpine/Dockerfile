@@ -49,3 +49,5 @@ RUN rm -rf openssl-${RESTY_OPENSSL_VERSION}.tar.gz openssl-${RESTY_OPENSSL_VERSI
            pcre-${RESTY_PCRE_VERSION}.tar.gz pcre-${RESTY_PCRE_VERSION} \
            openresty-${RESTY_VERSION}.tar.gz openresty-${RESTY_VERSION}
 WORKDIR /
+EXPOSE 80
+CMD ["/use/local/openresty/nginx/sbin/nginx"]
