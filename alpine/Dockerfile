@@ -12,42 +12,31 @@ RUN apk add --update \
     readline ncurses zlib-dev
 
 
-# Docker Build Arguments
-ARG RESTY_VERSION="1.9.7.3"
-ARG RESTY_OPENSSL_VERSION="1.0.2e"
-ARG RESTY_PCRE_VERSION="8.38"
-ARG RESTY_J="1"
-ARG RESTY_CONFIG_OPTIONS="--with-ipv6 --with-pcre-jit --with-http_gunzip_module"
-
-# These are not intended to be user-specified
-ARG _RESTY_CONFIG_DEPS="--with-openssl=/tmp/openssl-${RESTY_OPENSSL_VERSION} --with-pcre=/tmp/pcre-${RESTY_PCRE_VERSION}"
-
-
 # Download and untar OpenSSL, PCRE, and OpenResty
 WORKDIR /tmp
 
-ADD https://www.openssl.org/source/openssl-${RESTY_OPENSSL_VERSION}.tar.gz /tmp/openssl-${RESTY_OPENSSL_VERSION}.tar.gz
-RUN tar xzf openssl-${RESTY_OPENSSL_VERSION}.tar.gz
+ADD https://www.openssl.org/source/openssl-1.0.2e.tar.gz /tmp/openssl-1.0.2e.tar.gz
+RUN tar xzf openssl-1.0.2e.tar.gz
 
-ADD https://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${RESTY_PCRE_VERSION}.tar.gz /tmp/pcre-${RESTY_PCRE_VERSION}.tar.gz
-RUN tar xzf pcre-${RESTY_PCRE_VERSION}.tar.gz
+ADD https://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.gz /tmp/pcre-8.38.tar.gz
+RUN tar xzf pcre-8.38.tar.gz
 
-ADD https://openresty.org/download/openresty-${RESTY_VERSION}.tar.gz /tmp/openresty-${RESTY_VERSION}.tar.gz
-RUN tar xzf openresty-${RESTY_VERSION}.tar.gz
+ADD https://openresty.org/download/openresty-1.9.7.3.tar.gz /tmp/openresty-1.9.7.3.tar.gz
+RUN tar xzf openresty-1.9.7.3.tar.gz
 
 
 # Build OpenResty
-WORKDIR /tmp/openresty-${RESTY_VERSION}
-RUN ./configure -j${RESTY_J} ${_RESTY_CONFIG_DEPS} ${RESTY_CONFIG_OPTIONS} && \
-    make -j${RESTY_J} && \
-    make -j${RESTY_J} install
+WORKDIR /tmp/openresty-1.9.7.3
+RUN ./configure -j1 --with-openssl=/tmp/openssl-1.0.2e --with-pcre=/tmp/pcre-8.38 --with-ipv6 --with-pcre-jit --with-http_gunzip_module && \
+    make -j1 && \
+    make -j1 install
 
 
 # Cleanup
 WORKDIR /tmp
-RUN rm -rf openssl-${RESTY_OPENSSL_VERSION}.tar.gz openssl-${RESTY_OPENSSL_VERSION} \
-           pcre-${RESTY_PCRE_VERSION}.tar.gz pcre-${RESTY_PCRE_VERSION} \
-           openresty-${RESTY_VERSION}.tar.gz openresty-${RESTY_VERSION}
+RUN rm -rf openssl-1.0.2e.tar.gz openssl-1.0.2e \
+           pcre-8.38.tar.gz pcre-8.38 \
+           openresty-1.9.7.3.tar.gz openresty-1.9.7.3
 WORKDIR /
 EXPOSE 80
 CMD ["/use/local/openresty/nginx/sbin/nginx"]
